@@ -1,5 +1,6 @@
 /**
- * @typedef {{what: string, who1: string, who2?: string}} PartialElf
+ * @typedef {{what: string, who1: string, muszak1:string, who2?: string, muszak2?:string}} PartialElf
+ * @typedef {{idFor:string,labelTxt:string,tipus:string}} FormObj
  */
 
 /**
@@ -7,25 +8,26 @@
  *
  */
 const tableSelector = document.getElementById('tableselector')
-tableSelector.addEventListener("change",function(e){
-    
+tableSelector.addEventListener("change", function (e) {
+
     /**@type {HTMLInputElement} */
     const target = e.target
 
     const htmlSelection = document.getElementById("htmlsection")
     const jsSection = document.getElementById('jssection')
 
-    if(target.checked){
-        if(target.value=="htmlsection"){
+    if (target.checked) {
+        if (target.value == "htmlsection") {
             jsSection.classList.add('hide')
             htmlSelection.classList.remove('hide')
-        }else{
+        } else {
             jsSection.classList.remove('hide')
             htmlSelection.classList.add('hide')
         }
     }
 })
 //-------------------------------------------én fuggvenyeim----------------------------------------->
+//--Tabla
 /**
  * 
  * @param {"td"|"th"} cellType 
@@ -33,9 +35,9 @@ tableSelector.addEventListener("change",function(e){
  * @param {htmlta} parentTr 
  * @returns {HTMLTableCellElement}
  */
-function createTableCell(cellType,cellContent,parentTr){
+function createTableCell(cellType, cellContent, parentTr) {
     const tdh = document.createElement(cellType)
-    tdh.innerText=cellContent
+    tdh.innerText = cellContent
     parentTr.appendChild(tdh)
     return tdh
 }
@@ -45,18 +47,20 @@ function createTableCell(cellType,cellContent,parentTr){
  * @param {PartialElf} tableRow 
  * @returns {void}
  */
-function createTableRow(tBody,tableRow){
+function createTableRow(tBody, tableRow) {
     const tr = document.createElement('tr')
     tBody.appendChild(tr)
 
-    const tdO =createTableCell("td",tableRow.what,tr)
-    createTableCell("td",tableRow.who1,tr)
-    if(tableRow.who2){
-        tdO.rowSpan=2
+    const tdO = createTableCell("td", tableRow.what, tr)
+    createTableCell("td", tableRow.who1, tr)
+    createTableCell("td", tableRow.muszak1, tr)
+    if (tableRow.who2 && tableRow.muszak2) {
+        tdO.rowSpan = 2
         const tr1 = document.createElement('tr')
         tBody.appendChild(tr1)
 
-        createTableCell("td",tableRow.who2,tr1)
+        createTableCell("td", tableRow.who2, tr1)
+        createTableCell("td", tableRow.muszak2, tr1)
     }
 }
 /**
@@ -105,6 +109,87 @@ function createTableBody(tableArr) {
         createTableRow(tbody, obj)
     }
 }
+//--Form
+/**
+ * 
+ * @param {HTMLDivElement} parentDiv 
+ * @returns {void}
+ */
+function bR(parentDiv) {
+    const br = document.createElement('br')
+    parentDiv.appendChild(br)
+}
+/**
+ * 
+ * @param {HTMLFormElement} parentForm 
+ * @param {string} variant 
+ * @param {string} forIdName 
+ * @param {string} labContenet 
+ * @returns {void}
+ */
+function createInputFieldVariantsDiv(parentForm, variant, forIdName, labContenet) {
+    const div = document.createElement('div')
+    parentForm.appendChild(div)
+
+    const label = document.createElement('label')
+    label.htmlFor = forIdName
+    label.innerText = labContenet
+    div.appendChild(label)
+
+    if (variant == "input") {
+        bR(div)
+        const input = document.createElement('input')
+        input.type = "text"
+        input.id = forIdName
+        input.name = forIdName
+        div.appendChild(input)
+        bR(div)
+    } else if (variant == "select") {
+        bR(div)
+        const select = document.createElement('select')
+        select.id = forIdName
+        div.appendChild(select)
+        createoption(select, "válassz műszakot!")
+        createoption(select, "Délelöttös", "1")
+        createoption(select, "Délutános", "2")
+        createoption(select, "Éjszakai", "3")
+    } else if (variant == "checkbox") {
+        const input = document.createElement('input')
+        input.type = "checkbox"
+        input.id = forIdName
+        input.name = forIdName
+        div.appendChild(input)
+        bR(div)
+    }
+    const span = document.createElement('span')
+    span.classList.add('error')
+    div.appendChild(span)
+}
+/**
+ * 
+ * @param {string} formId 
+ * @param {FormObj[]} formArr 
+ * @returns {HTMLFormElement}
+ */
+function createForm(formId,formArr) {
+    const jsSection = document.getElementById('jssection')
+    const form = document.createElement('form')
+    form.id = formId
+    jsSection.appendChild(form)
+
+    for(const obj of formArr){
+        if(obj.tipus=="input"){createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)}
+        if(obj.tipus=="select"){createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)}
+        if(obj.tipus=="checkbox"){createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)}
+    }
+
+    const button = document.createElement('button')
+    button.innerText="Hozzáadás"
+    form.appendChild(button)
+
+    return form
+}
+//--valid+event
 //----------------------------------------Gombi jatekszerei----------------------------------------->
 /**
  * Ez a függvény a javascript legvégén fut le, amikor már minden elem betöltött.
@@ -116,9 +201,9 @@ function createTableBody(tableArr) {
  * @param {HTMLInputElement} checkboxElem ami a formon belül helyezkedik el
  * @returns {void}
  */
-function initCheckbox(checkboxElem){
+function initCheckbox(checkboxElem) {
     changeCheckboxValue(checkboxElem)
-    checkboxElem.addEventListener("change",function(e){
+    checkboxElem.addEventListener("change", function (e) {
 
         /**@type {HTMLInputElement} */
         const target = e.target
@@ -138,16 +223,16 @@ function initCheckbox(checkboxElem){
  * @param {HTMLInputElement} checkbox egy jelölőnégyzet
  * @returns {void}
  */
-function changeCheckboxValue(checkbox){
-    const pipa =checkbox.checked
+function changeCheckboxValue(checkbox) {
+    const pipa = checkbox.checked
 
     const form = checkbox.parentElement.parentElement
     /**@type {HTMLInputElement} */
     const mano2 = form.querySelector('#mano2')
     /**@type {HTMLInputElement} */
-    const muszak2= form.querySelector('#muszak2')
+    const muszak2 = form.querySelector('#muszak2')
     mano2.disabled = !pipa
-    muszak2.disabled= !pipa
+    muszak2.disabled = !pipa
 }
 /**
  * Segédfüggvény, aminek a segítségével elkérjük a htmlformon belüli 
@@ -179,10 +264,10 @@ function initSelect(arr) {
     const select = getSelectElement();
     select.innerHTML = '';
     createoption(select, "Válassz Manót!"); // ez a függvény még nincs implementálva, görgess lejjebb
-    for(const mano of arr){
-        createoption(select, mano.who1,mano.who1)
-        if(mano.who2){
-            createoption(select,mano.who2,mano.who2)
+    for (const mano of arr) {
+        createoption(select, mano.who1, mano.who1)
+        if (mano.who2) {
+            createoption(select, mano.who2, mano.who2)
         }
     }
 }
@@ -196,8 +281,8 @@ function initSelect(arr) {
  */
 function createoption(selectElement, label, value = "") {
     const option = document.createElement('option')
-    option.innerText=label
-    option.value=value
+    option.innerText = label
+    option.value = value
     selectElement.appendChild(option)
 }
 /**
@@ -221,9 +306,9 @@ function createoption(selectElement, label, value = "") {
  */
 function createNewElement(obj, form, array) {
     const select = getSelectElement()
-    createoption(select,obj.who1,obj.who1)
-    if(obj.who2){
-        createoption(select,obj.who2,obj.who2)
+    createoption(select, obj.who1, obj.who1)
+    if (obj.who2) {
+        createoption(select, obj.who2, obj.who2)
     }
     // ez egy ismerős rész, ehhez nem kell nyúlni
     array.push(obj);
@@ -245,15 +330,15 @@ function createNewElement(obj, form, array) {
  * @param {string} muszakValue az érték, amit a select optionjéből kapunk
  * @returns {string}
  */
-function mapMuszak(muszakValue){
-    if(muszakValue==1){
-        muszakValue="Délelöttös"
+function mapMuszak(muszakValue) {
+    if (muszakValue == 1) {
+        muszakValue = "Délelöttös"
     }
-    if(muszakValue==2){
-        muszakValue="Délutános"
+    if (muszakValue == 2) {
+        muszakValue = "Délutános"
     }
-    if(muszakValue==3){
-        muszakValue="Éjszakai"
+    if (muszakValue == 3) {
+        muszakValue = "Éjszakai"
     }
     console.log(muszakValue);
     return muszakValue;

@@ -1,20 +1,64 @@
+//-------------------------------table-------------------
 /**
  * @type {PartialElf[]}
  */
-const arr =[
+const arrTable =[
     {
         what :"Logisztika",
         who1:"Kovács Máté",
-        who2:"Kovács József"
+        muszak1:"Délelöttös",
+        who2:"Kovács József",
+        muszak2:"Délutános"
     },
     {
         what :"Könyvelés",
-        who1:"Szabó Anna"
+        who1:"Szabó Anna",
+        muszak1:"Éjszakai"
     },
     {
         what :"Játékfeklesztés",
         who1:"Varga Péter",
-        who2:"Nagy Eszter"
-    },
+        muszak1:"Délutános",
+        who2:"Nagy Eszter",
+        muszak2:"Éjszakai"
+    }
 ]
-createFrame("jssection","jstbody",["Osztály","Manó","Műszak"],arr)
+createFrame("jssection","jstbody",["Osztály","Manó","Műszak"],arrTable)
+//------------------------------form-------------------------
+/**
+ * @type {FormObj[]}
+ */
+const arrForm =[
+    {//input
+        idFor:"osztaly",
+        labelTxt:"Osztaly",
+        tipus:"input"
+    },
+    {//input
+        idFor:"mano1",
+        labelTxt:"Manó 1",
+        tipus:"input"
+    },
+    {//select
+        idFor:"muszak1",
+        labelTxt:"Manó 1 műszak",
+        tipus:"select"
+    },
+    {//checkbox
+        idFor:"masodikmano",
+        labelTxt:"Két manót veszek fel",
+        tipus:"checkbox"
+    },
+    {//input
+        idFor:"mano2",
+        labelTxt:"Manó 2",
+        tipus:"input"
+    },
+    {//select
+        idFor:"muszak2",
+        labelTxt:"Manó 2 műszak",
+        tipus:"select"
+    }
+]
+const jsForm = createForm("jsform",arrForm)
+const htmlForm = document.getElementById('htmlform')
