@@ -146,14 +146,17 @@ function createoption(selectElement, label, value = "") {
  * @returns {void}
  */
 function createNewElement(obj, form, array) {
-    
-
+    const select = getSelectElement()
+    createoption(select,obj.who1,obj.who1)
+    if(obj.who2){
+        createoption(select,obj.who2,obj.who2)
+    }
     // ez egy ismerős rész, ehhez nem kell nyúlni
     array.push(obj);
     renderTbody(array);
     form.reset();
     // ismerős rész vége
-
+    changeCheckboxValue
 }
 
 /**
