@@ -25,8 +25,87 @@ tableSelector.addEventListener("change",function(e){
         }
     }
 })
+//-------------------------------------------én fuggvenyeim----------------------------------------->
+/**
+ * 
+ * @param {"td"|"th"} cellType 
+ * @param {string} cellContent 
+ * @param {htmlta} parentTr 
+ * @returns {HTMLTableCellElement}
+ */
+function createTableCell(cellType,cellContent,parentTr){
+    const tdh = document.createElement(cellType)
+    tdh.innerText=cellContent
+    parentTr.appendChild(tdh)
+    return tdh
+}
+/**
+ * 
+ * @param {HTMLTableSectionElement} tBody 
+ * @param {PartialElf} tableRow 
+ * @returns {void}
+ */
+function createTableRow(tBody,tableRow){
+    const tr = document.createElement('tr')
+    tBody.appendChild(tr)
 
+    const tdO =createTableCell("td",tableRow.what,tr)
+    createTableCell("td",tableRow.who1,tr)
+    if(tableRow.who2){
+        tdO.rowSpan=2
+        const tr1 = document.createElement('tr')
+        tBody.appendChild(tr1)
 
+        createTableCell("td",tableRow.who2,tr1)
+    }
+}
+/**
+ * 
+ * @param {string} divId
+ * @param {string} tbodyId 
+ * @param {string[]} fejLec 
+ * @param {PartialElf[]} arrO
+ * @returns {void}
+ */
+function createFrame(divId, tbodyId, fejLec, arrO) {
+    const div = document.createElement('div')
+    div.id = divId
+    div.classList.add('hide')
+    document.body.appendChild(div)
+
+    const table = document.createElement('table')
+    div.appendChild(table)
+
+    const thead = document.createElement('thead')
+    table.appendChild(thead)
+
+    const tr = document.createElement('tr')
+    thead.appendChild(tr)
+
+    for (const cim of fejLec) {
+        createTableCell("th", cim, tr)
+    }
+
+    const tbody = document.createElement('tbody')
+    tbody.id = tbodyId
+    table.appendChild(tbody)
+
+    createTableBody(arrO)
+}
+/**
+ * 
+ * @param {PartialElf[]} tableArr 
+ * @returns {void}
+ */
+function createTableBody(tableArr) {
+    const tbody = document.getElementById('jstbody')
+    tbody.innerHTML = ""
+
+    for (const obj of tableArr) {
+        createTableRow(tbody, obj)
+    }
+}
+//----------------------------------------Gombi jatekszerei----------------------------------------->
 /**
  * Ez a függvény a javascript legvégén fut le, amikor már minden elem betöltött.
  * Első lépésben vizsgáljuk a checkbox értékét, és az alapján beállítjuk a többi elem
@@ -47,7 +126,6 @@ function initCheckbox(checkboxElem){
         changeCheckboxValue(target)
     })
 }
-
 /**
  * 
  * A bemeneti checkbox értéke alapján állítja a formon belüli mano2 és muszak2 disabled
@@ -71,7 +149,6 @@ function changeCheckboxValue(checkbox){
     mano2.disabled = !pipa
     muszak2.disabled= !pipa
 }
-
 /**
  * Segédfüggvény, aminek a segítségével elkérjük a htmlformon belüli 
  * manochooser azonosítójú elemet, ami tartalmazza az összes rendszerben létező manót
@@ -83,7 +160,6 @@ function getSelectElement() {
     const select = htmlForm.querySelector('#manochooser');
     return select;
 }
-
 /**
  * 
  * A tömb alapján felépíti a dropdownlist opcióit.
@@ -110,7 +186,6 @@ function initSelect(arr) {
         }
     }
 }
-
 /**
  * Létrehoz és hozzáfűz egy új optiont a selecthez
  * 
@@ -125,7 +200,6 @@ function createoption(selectElement, label, value = "") {
     option.value=value
     selectElement.appendChild(option)
 }
-
 /**
  * 
  * Ez a függvény azután fut le az eseménykezelőben,
@@ -158,7 +232,6 @@ function createNewElement(obj, form, array) {
     // ismerős rész vége
     changeCheckboxValue
 }
-
 /**
  * 
  * Mivel a műszakválasztó 1,2 vagy 3 elemet vesz fel,
