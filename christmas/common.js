@@ -182,7 +182,40 @@ function createForm(formId,formArr) {
     return form
 }
 //--valid+event
-
+/**
+ * 
+ * @param {HTMLInputElement | HTMLSelectElement} Field 
+ * @param {string} errorTxt 
+ * @returns {boolean}
+ */
+function validInput(Field,errorTxt){
+    let van = true
+    const div = Field.parentElement
+    const span = div.querySelector('.error')
+    if(Field.value ==""){
+        span.innerText = errorTxt
+        van = false
+    }else{
+        span.innerText = ""
+    }
+    return van
+}
+/**
+ * 
+ * @param {HTMLInputElement} whatInput 
+ * @param {HTMLInputElement} who1Input 
+ * @param {HTMLSelectElement} muszak1Select 
+ * @returns {boolean}
+ */
+function validateFields(whatInput,who1Input,muszak1Select){
+    let van = true
+    /**@type {string} */
+    const errorTxt = "kötelező kitölteni!"
+    if(validInput(whatInput,errorTxt)==false){van = false}
+    if(validInput(who1Input,errorTxt)==false){van = false}
+    if(validInput(muszak1Select,errorTxt)==false){van = false}
+    return van
+}
 
 //----------------------------------------Gombi jatekszerei----------------------------------------->
 /**
