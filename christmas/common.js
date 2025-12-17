@@ -136,10 +136,11 @@ function createInputFieldVariantsDiv(parentForm, variant, forIdName, labContenet
     label.innerText = labContenet
     div.appendChild(label)
 
-    if (variant == "input") {
-        bR(div)
+    if (variant == "input" || variant == "checkbox") {
+        if(variant == "input"){bR(div)}
         const input = document.createElement('input')
-        input.type = "text"
+        if(variant == "input"){input.type = "text"}
+        if(variant == "checkbox"){input.type = "checkbox"}
         input.id = forIdName
         input.name = forIdName
         div.appendChild(input)
@@ -153,13 +154,6 @@ function createInputFieldVariantsDiv(parentForm, variant, forIdName, labContenet
         createoption(select, "Délelöttös", "1")
         createoption(select, "Délutános", "2")
         createoption(select, "Éjszakai", "3")
-    } else if (variant == "checkbox") {
-        const input = document.createElement('input')
-        input.type = "checkbox"
-        input.id = forIdName
-        input.name = forIdName
-        div.appendChild(input)
-        bR(div)
     }
     const span = document.createElement('span')
     span.classList.add('error')
@@ -178,9 +172,7 @@ function createForm(formId,formArr) {
     jsSection.appendChild(form)
 
     for(const obj of formArr){
-        if(obj.tipus=="input"){createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)}
-        if(obj.tipus=="select"){createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)}
-        if(obj.tipus=="checkbox"){createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)}
+        createInputFieldVariantsDiv(form,obj.tipus,obj.idFor,obj.labelTxt)
     }
 
     const button = document.createElement('button')
@@ -190,6 +182,8 @@ function createForm(formId,formArr) {
     return form
 }
 //--valid+event
+
+
 //----------------------------------------Gombi jatekszerei----------------------------------------->
 /**
  * Ez a függvény a javascript legvégén fut le, amikor már minden elem betöltött.

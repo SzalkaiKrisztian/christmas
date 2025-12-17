@@ -62,3 +62,22 @@ const arrForm =[
 ]
 const jsForm = createForm("jsform",arrForm)
 const htmlForm = document.getElementById('htmlform')
+//------------------------------Event------------------------
+jsForm.addEventListener("submit",function(e){
+    e.preventDefault()
+    /**@type {HTMLFormElement} */
+    const target = e.target
+    
+    /**@type {HTMLInputElement} */
+    const osztalyInput = target.querySelector('#osztaly')
+    
+    /**@type {HTMLInputElement} */
+    const mano1Input = target.querySelector('#mano1')
+    /**@type {HTMLSelectElement} */
+    const muszak1Select = target.querySelector('#muszak1')
+
+    /**@type {HTMLInputElement} */
+    const masikmanoCheckBox = target.querySelector('#masodikmano')
+
+    
+})
